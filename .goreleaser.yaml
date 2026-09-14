@@ -9,14 +9,11 @@ builds:
     env:
       - CGO_ENABLED=1
       - CGO_CFLAGS=-I/usr/local/opt/whisper/include -mmacosx-version-min=14.0
-      - CGO_LDFLAGS=-L/usr/local/opt/whisper/lib -mmacosx-version-min=14.0
+      - CGO_LDFLAGS=-L/usr/local/opt/whisper/lib -mmacosx-version-min=14.0 -Wl,-rpath,@executable_path/lib
     goos:
       - darwin
     goarch:
       - arm64
-    hooks:
-      post:
-        - install_name_tool -add_rpath "@executable_path/lib" "{{ .Path }}" || true
 
 archives:
   - ids:
