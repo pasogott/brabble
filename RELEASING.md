@@ -12,7 +12,7 @@ manifest is a private development wrapper. There is no Homebrew tap handoff.
    version tag and GitHub Release do not already exist, then create and push a
    signed tag: `git tag -s vVERSION -m vVERSION`.
 4. Wait for `.github/workflows/release.yml`. The workflow builds whisper.cpp,
-   bundles its libraries, and signs and notarizes the executable before
+   signs and notarizes its bundled libraries, then signs and notarizes the executable before
    GoReleaser publishes the archive and checksums. The release notes are the
    matching changelog section, without its version heading.
 5. Download the published archive, verify its checksum and quarantine behavior,
@@ -26,9 +26,12 @@ manifest is a private development wrapper. There is no Homebrew tap handoff.
 The repository needs these GitHub Actions secrets from the existing personal
 release credentials: `MACOS_SIGNING_P12` (base64 Developer ID p12),
 `MACOS_SIGNING_P12_PASSWORD`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, and
-`ASC_PRIVATE_KEY_P8`. GoReleaser signs through its built-in signing support;
-the workflow does not modify the user keychain search list. It waits for Apple
-notarization, and the temporary API key file is removed in an always-run step.
+`ASC_PRIVATE_KEY_P8`. GoReleaser signs the executable through its built-in signing
+support. Runtime libraries use a temporary keychain on the isolated Actions
+runner; cleanup restores the runner's search list and deletes that keychain.
+Both notarization submissions wait for Apple, and the temporary API key file is
+removed in an always-run step. Local release verification does not change the
+user keychain search list.
 
 For a local packaging check without release credentials, use GoReleaser snapshot
 mode with `--skip=publish,notarize`. A snapshot is not release signing proof.
