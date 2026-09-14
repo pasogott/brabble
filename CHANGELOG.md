@@ -3,14 +3,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.2] - 2026-09-13
+
+**Highlights:** Protect private voice data, restore reproducible macOS builds, and manage Linux systemd user services.
+
+### Added
+- Add systemd user-service management and Linux whisper.cpp runtime linkage. (#11, #12)
 
 ### Fixed
-- Fix macOS tests failing to load whisper.cpp with signed Go toolchains by linking the native runtime search path into test binaries.
-- Restore documented single-hook configs and `test-hook` routing through the per-wake dispatcher; validate every configured hook in `doctor`.
+- Sign and notarize macOS release executables so quarantined downloads can run; set the release minimum to macOS 14.
 - Protect local voice data with private transcript, control-socket, and launchd-plist permissions; omit hook environment values from logs.
+- Restore documented single-hook configs and `test-hook` routing through the per-wake dispatcher; validate every configured hook in `doctor`.
 - Bound metrics request headers to prevent slow-client resource exhaustion.
 - Restore reproducible macOS releases by building the binding-matched whisper.cpp revision and bundling its runtime libraries.
+- Keep systemd unit tests inside temporary directories on macOS.
+- Fix macOS tests failing to load whisper.cpp with signed Go toolchains by linking the native runtime search path into test binaries.
 
 ### Changed
 - Build with Go 1.27.1 by default while retaining Go 1.27.0 source compatibility.
@@ -33,6 +40,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Doctor checks deps/model/portaudio; service command writes launchd plist with env; health check.
 - Rich, colored Go help output with examples; pnpm scripts for build/run.
 
-[Unreleased]: https://github.com/steipete/brabble/compare/v0.1.1...HEAD
+[0.1.2]: https://github.com/steipete/brabble/releases/tag/v0.1.2
 [0.1.1]: https://github.com/steipete/brabble/releases/tag/v0.1.1
 [0.1.0]: https://github.com/steipete/brabble/releases/tag/v0.1.0

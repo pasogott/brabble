@@ -8,8 +8,8 @@ builds:
     binary: brabble
     env:
       - CGO_ENABLED=1
-      - CGO_CFLAGS=-I/usr/local/opt/whisper/include
-      - CGO_LDFLAGS=-L/usr/local/opt/whisper/lib
+      - CGO_CFLAGS=-I/usr/local/opt/whisper/include -mmacosx-version-min=14.0
+      - CGO_LDFLAGS=-L/usr/local/opt/whisper/lib -mmacosx-version-min=14.0
     goos:
       - darwin
     goarch:
@@ -30,6 +30,22 @@ archives:
       - src: CHANGELOG.md
       - src: .release-libs/*.dylib
         dst: lib
+
+notarize:
+  macos:
+    - enabled: true
+      ids:
+        - brabble
+      sign:
+        certificate: "env:MACOS_SIGNING_P12"
+        password: "{{ .Env.MACOS_SIGNING_P12_PASSWORD }}"
+        entitlements: .github/macos-entitlements.plist
+      notarize:
+        issuer_id: "{{ .Env.ASC_ISSUER_ID }}"
+        key_id: "{{ .Env.ASC_KEY_ID }}"
+        key: "{{ .Env.NOTARY_KEY_FILE }}"
+        wait: true
+        timeout: 20m
 
 checksum:
   name_template: checksums.txt

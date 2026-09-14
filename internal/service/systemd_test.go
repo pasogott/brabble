@@ -9,12 +9,17 @@ import (
 
 func TestWriteSystemdUnit(t *testing.T) {
 	dir := t.TempDir()
+	t.Setenv("HOME", dir)
 	t.Setenv("XDG_CONFIG_HOME", dir)
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		t.Fatal(err)
+	}
 	path, err := WriteSystemdUnit(LaunchdParams{Binary: "/tmp/voice app", Config: "/tmp/a%b.toml", Env: map[string]string{"TOKEN": "a%b"}})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if path != filepath.Join(dir, "systemd/user/brabble.service") {
+	if path != filepath.Join(configDir, "systemd/user/brabble.service") {
 		t.Fatal(path)
 	}
 	data, err := os.ReadFile(path)
