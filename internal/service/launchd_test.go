@@ -45,4 +45,10 @@ func TestWritePlistRestrictsPermissionsAndEscapesValues(t *testing.T) {
 	if bytes.Contains(data, []byte("private&value")) || !bytes.Contains(data, []byte("private&amp;value")) {
 		t.Fatalf("plist value was not XML-escaped: %s", data)
 	}
+	if bytes.Contains(data, []byte("--foreground")) {
+		t.Fatalf("plist still passes --foreground: %s", data)
+	}
+	if !bytes.Contains(data, []byte("<string>serve</string>")) {
+		t.Fatalf("plist = %s; want serve", data)
+	}
 }
